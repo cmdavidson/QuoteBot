@@ -69,7 +69,7 @@ function getQuoteCount(quotes, quotee){
         }
     });
 
-    return (quotee + " currently has " + quoteeCount + " quotes.");
+    return (quotee + " currently has " + quoteeCount + " quote(s).");
 }
 
 function findBestQuote(quotes, quotee) {
@@ -383,32 +383,27 @@ function runQuoteLogic(client, reqText, sender_type) {
                             reject();
                         }
 
+                        var validText = reqText.replace(/“/g, '"').replace(/”/g, '"').replace(/‘/g, "'").replace(/’/, "'");
+
                         var reqTargetUser = "";
                         var reqTargetQuote = "";
-                        //Check if we have a quote mark somewhere in the string
-                        var usesIQuotes = (reqText.includes("“") && reqText.includes("”"));
 
-                        if (reqText.includes('"') || usesIQuotes) {
+                        if (validText.includes('"')) {
                             var quoteIndex = undefined;
                             var endQuoteIndex = undefined;
-                            if(usesIQuotes){
-                                quoteIndex = reqText.indexOf("“");
-                                endQuoteIndex = reqText.indexOf("”");
-                            } else {
-                                quoteIndex = reqText.indexOf('"');
-                                endQuoteIndex = reqText.substring(quoteIndex).indexOf('"') //Make sure we have a full quote
-                            }
+                            quoteIndex = validText.indexOf('"');
+                            endQuoteIndex = validText.substring(quoteIndex).indexOf('"') //Make sure we have a full quote
                             
                             if (endQuoteIndex === -1 || quoteIndex < reqCommand.length + 2) { //Make sure we have end quotes and also that our first quote is in a realistic place
                                 reject();
                             }
 
-                            reqTargetUser = reqText.substring(reqCommand.length + 1, quoteIndex - 1);
-                            reqTargetQuote = reqText.substring(quoteIndex + 1, reqText.length - 1);
+                            reqTargetUser = validText.substring(reqCommand.length + 1, quoteIndex - 1);
+                            reqTargetQuote = validText.substring(quoteIndex + 1, validText.length - 1);
 
                         } else {
-                            reqTargetUser = reqText.split(" ")[1];
-                            reqTargetQuote = reqText.substring(reqTargetUser.length + reqCommand.length + 2);
+                            reqTargetUser = validText.split(" ")[1];
+                            reqTargetQuote = validText.substring(reqTargetUser.length + reqCommand.length + 2);
                         }
 
 
