@@ -4,6 +4,7 @@ const router = express.Router();
 const quoteLogic = require("./quoteLogic");
 /*Make requests to appshare with our bot*/
 const XMLHttpRequest = require("xmlhttprequest").XMLHttpRequest;
+const sanitize = require('mongo-sanitize');
 
 const userName = process.env.USERNAME;
 const password = process.env.PASSWORD;
@@ -23,7 +24,6 @@ function setupConnection() {
 router.post("/", function (req, res) {
     var client = setupConnection();
     quoteLogic.runQuoteLogic(client, req.body.text, req.body.sender_type).then((responseText) => {
-        console.log("REEEEEEEEEE")
         res.status(200).send();
         if (responseText !== "") {
             var groupmeMessageContent = {
@@ -44,4 +44,22 @@ router.post("/", function (req, res) {
     });
 });
 
+router.get("/quotes", function (req,res){
+    var nameParam = ".*"
+    var quoteParam = ".*"
+    if(req.query.name){
+        nameParam = sanitize(req.query.name)
+    }
+    if(req.query.quote){
+        quoteParam = sanitize(req.query.quote)
+    }
+    console.log("start")
+    var client = setupConnection();
+    quoteLogic.getQuoteQueryResults(client, nameParam, quoteParam).then((results) => {
+        res.status(200).send({"results": results});
+        client.close()
+    }).catch(function(error){
+        console.log("err: ", error);
+    });
+});
 module.exports = router;

@@ -260,15 +260,15 @@ function runQuoteLogic(client, reqText, sender_type) {
         if (sender_type === "user") {
             client.connect(err => {
                 collection = client.db("Quotes").collection("quote");
-                var reqWords = reqText.split(" ");
+                var validText = reqText.replace(/“/g, '"').replace(/”/g, '"').replace(/‘/g, "'").replace(/’/, "'");
+                var reqWords = validText.split(" ");
                 var reqCommand = reqWords[0];
-
                 switch (reqCommand.toUpperCase()) {
                     case "/QUOTE":
                         //Find quote of specified user, pick random
                         var reqTargetUser = "";
                         if (reqWords.length > 1) { //Multi word user
-                            reqTargetUser = reqText.substring(reqCommand.length + 1);
+                            reqTargetUser = validText.substring(reqCommand.length + 1);
                         }
                         if (reqTargetUser) {
                             getQuotesFromDB().then((quotes) => {
@@ -291,7 +291,7 @@ function runQuoteLogic(client, reqText, sender_type) {
                         //Find quote of specified user, pick random
                         var reqTargetUser = "";
                         if (reqWords.length > 1) { //Multi word user
-                            reqTargetUser = reqText.substring(reqCommand.length + 1);
+                            reqTargetUser = validText.substring(reqCommand.length + 1);
                         }
                         if (reqTargetUser) {
                             getQuotesFromDB().then((quotes) => {
@@ -313,7 +313,7 @@ function runQuoteLogic(client, reqText, sender_type) {
                     case "/QUOMTE": //Cheems
                         var reqTargetUser = "";
                         if (reqWords.length > 1) { //Multi word user
-                            reqTargetUser = reqText.substring(reqCommand.length + 1);
+                            reqTargetUser = validText.substring(reqCommand.length + 1);
                         }
                         if (reqTargetUser) {
                             getQuotesFromDB().then((quotes) => {
@@ -335,7 +335,7 @@ function runQuoteLogic(client, reqText, sender_type) {
                     case "/QWOMTE": //Real degen hours
                         var reqTargetUser = "";
                         if (reqWords.length > 1) { //Multi word user
-                            reqTargetUser = reqText.substring(reqCommand.length + 1);
+                            reqTargetUser = validText.substring(reqCommand.length + 1);
                         }
                         if (reqTargetUser) {
                             getQuotesFromDB().then((quotes) => {
@@ -360,7 +360,7 @@ function runQuoteLogic(client, reqText, sender_type) {
                         //Find quote of specified user, pick random
                         var reqTargetUser = "";
                         if (reqWords.length > 1) { //Multi word user
-                            reqTargetUser = reqText.substring(reqCommand.length + 1);
+                            reqTargetUser = validText.substring(reqCommand.length + 1);
                         }
                         if (reqTargetUser) {
                             getQuotesFromDB().then((quotes) => {
@@ -382,8 +382,6 @@ function runQuoteLogic(client, reqText, sender_type) {
                         if (reqWords.length < 3) {
                             reject();
                         }
-
-                        var validText = reqText.replace(/“/g, '"').replace(/”/g, '"').replace(/‘/g, "'").replace(/’/, "'");
 
                         var reqTargetUser = "";
                         var reqTargetQuote = "";
@@ -424,4 +422,23 @@ function runQuoteLogic(client, reqText, sender_type) {
     });
 }
 
+function getQuoteQueryResults(client, name, quote){
+    return new Promise(function (resolve, reject) {
+        client.connect(err => {
+            if(err) {
+                reject(err);
+            }
+            console.log("test: ", client);
+            collection = client.db("Quotes").collection("quote");
+            collection.find({"user":{$regex: name.toUpperCase()}, "quote":{$regex: quote}}).toArray(function(err, docs){
+                if(err){
+                    reject(err);
+                }
+                resolve(docs);1
+            });
+        });
+    });
+}
+
+module.exports.getQuoteQueryResults = getQuoteQueryResults;
 module.exports.runQuoteLogic = runQuoteLogic;

@@ -10,7 +10,8 @@ app.use(bodyParser.urlencoded({
 app.use(bodyParser.json());
 /*Use your groupme handler for the server route*/
 app.use("/", quote);
+var appPort = (process.env.PORT || 8080);
 
-app.listen(process.env.PORT || 8080, function () {
-    console.log("Example app listening on port 3000!");
+app.listen(appPort, function () {
+    console.log("Example app listening on port " + appPort + "!");
 });
