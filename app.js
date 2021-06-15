@@ -3,7 +3,7 @@ const express = require("express");
 const app = express();
 const bodyParser = require("body-parser");
 const quote = require("./quote");
-const cors = require('cors')
+const cors = require('cors');
 
 /*Use json to parse the body*/
 app.use(bodyParser.urlencoded({
