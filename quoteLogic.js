@@ -1,3 +1,5 @@
+const ObjectID = require('mongodb').ObjectId;
+
 function similarity(s1, s2) {
     var longer = s1;
     var shorter = s2;
@@ -434,7 +436,13 @@ function getQuoteQueryResults(client, name, quote){
                 if(err){
                     reject(err);
                 }
-                resolve(docs);1
+                for(doc in docs){
+                    timestampedDoc = doc;
+                    docTimestamp = ObjectID(doc._id).getTimestamp();
+                    timestampedDoc.timestamp = docTimestamp;
+                    docs[doc] = timestampedDoc;
+                }
+                resolve(docs);
             });
         });
     });
