@@ -437,8 +437,8 @@ function getQuoteQueryResults(client, name, quote){
                     reject(err);
                 }
                 for(doc in docs){
-                    timestampedDoc = doc;
-                    docTimestamp = ObjectID(doc._id).getTimestamp();
+                    timestampedDoc = docs[doc];
+                    docTimestamp = ObjectID(timestampedDoc._id).getTimestamp();
                     timestampedDoc.timestamp = docTimestamp;
                     docs[doc] = timestampedDoc;
                 }
