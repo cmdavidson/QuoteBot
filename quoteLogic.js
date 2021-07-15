@@ -432,7 +432,7 @@ function getQuoteQueryResults(client, name, quote){
             }
             console.log("test: ", client);
             collection = client.db("Quotes").collection("quote");
-            collection.find({"user":{$regex: name.toUpperCase()}, "quote":{$regex: quote}}).toArray(function(err, docs){
+            collection.find({"user":{$regex: name.toUpperCase()}, "quote":{$regex: "/" + quote + "/i"}}).toArray(function(err, docs){
                 if(err){
                     reject(err);
                 }
