@@ -265,11 +265,14 @@ function runQuoteLogic(client, reqText, sender_type) {
                 var validText = reqText.replace(/“/g, '"').replace(/”/g, '"').replace(/‘/g, "'").replace(/’/, "'");
                 var reqWords = validText.split(" ");
                 var reqCommand = reqWords[0];
+                var reqTargetUser = "";
                 switch (reqCommand.toUpperCase()) {
+                    case "/DREVV":
+                        reqTargetUser = "drevv"
                     case "/QUOTE":
                         //Find quote of specified user, pick random
-                        var reqTargetUser = "";
-                        if (reqWords.length > 1) { //Multi word user
+                        
+                        if (reqWords.length > 1 && reqTargetUser !== "") { //Multi word user
                             reqTargetUser = validText.substring(reqCommand.length + 1);
                         }
                         if (reqTargetUser) {
