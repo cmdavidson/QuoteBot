@@ -272,7 +272,7 @@ function runQuoteLogic(client, reqText, sender_type) {
                     case "/QUOTE":
                         //Find quote of specified user, pick random
                         
-                        if (reqWords.length > 1 && reqTargetUser !== "") { //Multi word user
+                        if (reqWords.length > 1 && reqTargetUser === "") { //Multi word user
                             reqTargetUser = validText.substring(reqCommand.length + 1);
                         }
                         if (reqTargetUser) {
