@@ -80,7 +80,10 @@ function findBestQuote(quotes, quotee) {
     var foundMatch = false;
 
     quotes.forEach((quote) => {
-        if (quote.user.toUpperCase() === quotee.toUpperCase()) {
+        if(quotee.charAt(0) === "!" && (quote.user.toUpperCase() !== quotee.toUpperCase())){
+            foundMatch = true;
+            quoteeMatches.push(quote);
+        } else if (quote.user.toUpperCase() === quotee.toUpperCase()) {
             foundMatch = true;
             quoteeMatches.push(quote);
         } else if (!foundMatch && quote.user.toUpperCase().includes(quotee.toUpperCase())) {
@@ -408,8 +411,12 @@ function runQuoteLogic(client, reqText, sender_type) {
                             reqTargetUser = validText.split(" ")[1];
                             reqTargetQuote = validText.substring(reqTargetUser.length + reqCommand.length + 2);
                         }
-
-
+                        while(reqTargetUser.charAt(0)==="!") {
+                            reqTargetUser = reqTargetUser.substring(1);
+                        }
+                        if(reqTargetUser == ""){
+                            resolve("");
+                        }
                         collection.insertOne({
                             "user": reqTargetUser.toUpperCase(),
                             "quote": ('"' + reqTargetQuote + '" ~' + reqTargetUser)
