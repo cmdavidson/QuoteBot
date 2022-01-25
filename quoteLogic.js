@@ -265,7 +265,7 @@ function runQuoteLogic(client, reqText, sender_type) {
         if (sender_type === "user") {
             client.connect(err => {
                 collection = client.db("Quotes").collection("quote");
-                var validText = reqText.replace(/“/g, '"').replace(/”/g, '"').replace(/‘/g, "'").replace(/’/, "'");
+                var validText = reqText.trim().replace(/“/g, '"').replace(/”/g, '"').replace(/‘/g, "'").replace(/’/, "'");
                 var reqWords = validText.split(" ");
                 var reqCommand = reqWords[0];
                 var reqTargetUser = "";
